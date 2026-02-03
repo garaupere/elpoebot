@@ -113,7 +113,7 @@ function initOutputPage() {
 
 // Remove punctuation and get rhyme (last 4 characters)
 function getRhyme(text) {
-    const cleaned = text.replace(/[;:,.¿?¡!)(.\s]/g, '');
+    const cleaned = text.replace(/[;:,.¿?¡!)(\s]/g, '');
     return cleaned.slice(-4).toLowerCase();
 }
 
@@ -217,7 +217,7 @@ ${poem.lines.map((line, i) => `${line}`).join('\n')}
             <div class="result-header">&gt; ESTRUCTURA DEL POEMA:</div>
             <div class="result-text">&gt; Esquema de rimes: A-B-A-B</div>
             <div class="result-text">&gt; Nombre de línies: 4</div>
-            <div class="result-text">&gt; Tipus: Quarteta amb rimes consonants</div>
+            <div class="result-text">&gt; Tipus: Quarteta amb rimes basades en terminació</div>
         </div>
         <br>
         <div class="menu-item" style="text-align: center;">
