@@ -1,5 +1,18 @@
 // ELPOEBOT JavaScript - Generador de Poemes amb Corpus d'Usuari
 
+// Constants
+const CYCLE_RESTART_DELAY = 5000; // 5 seconds
+const ERROR_RETRY_DELAY = 10000; // 10 seconds
+const LOADING_PHRASES = [
+    "El geni fa la seva màgia",
+    "Això no és màgia, és literatura",
+    "Escriure un poema duu el seu temps, que us pensàveu",
+    "Compilant les síl·labes, analitzant el significat ocult",
+    "La meva poesia és semàntica de bits",
+    "Component els versos, alineant les idees",
+    "Tirant els versos per l'escala, recollint el poema"
+];
+
 // Initialize corpus from localStorage
 function getCorpus() {
     const corpus = localStorage.getItem('corpus');
@@ -145,19 +158,8 @@ function generatePoemCycle() {
     const maxDelay = 90000;
     const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     
-    // Random loading phrases
-    const loadingPhrases = [
-        "El geni fa la seva màgia",
-        "Això no és màgia, és literatura",
-        "Escriure un poema duu el seu temps, que us pensàveu",
-        "Compilant les síl·labes, analitzant el significat ocult",
-        "La meva poesia és semàntica de bits",
-        "Component els versos, alineant les idees",
-        "Tirant els versos per l'escala, recollint el poema"
-    ];
-    
     // Select random loading phrase
-    const randomPhrase = loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
+    const randomPhrase = LOADING_PHRASES[Math.floor(Math.random() * LOADING_PHRASES.length)];
     
     // Show waiting message with countdown
     const startTime = Date.now();
@@ -198,16 +200,16 @@ function generatePoemCycle() {
             // Continue the cycle - generate next poem after current one is displayed
             setTimeout(() => {
                 generatePoemCycle();
-            }, 5000); // Wait 5 seconds before starting next cycle
+            }, CYCLE_RESTART_DELAY);
         } else {
             resultsDisplay.innerHTML = `
                 <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
                 <p>&gt; Intenta afegir més versos al corpus.</p>
             `;
-            // Retry after 10 seconds if error occurs
+            // Retry after error
             setTimeout(() => {
                 generatePoemCycle();
-            }, 10000);
+            }, ERROR_RETRY_DELAY);
         }
     }, randomDelay);
 }
