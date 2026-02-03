@@ -400,11 +400,6 @@ function displayPoem(poem, randomPhrase) {
 ${poem.lines.map((line, i) => `${line}`).join('\n')}
             </div>
         </div>
-        <br>
-        <div class="info-box">
-            <p>&gt; ${randomPhrase}</p>
-            <p>&gt; Total de poemes al book: ${book.length}</p>
-        </div>
     `;
     
     poemDisplay.innerHTML = html;
