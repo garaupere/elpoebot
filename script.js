@@ -451,3 +451,38 @@ function downloadBook() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// Download corpus as text file
+function downloadCorpus() {
+    const corpus = getCorpus();
+    
+    if (corpus.length === 0) {
+        alert('El corpus està buit. Afegeix alguns versos primer.');
+        return;
+    }
+    
+    let corpusContent = '═══════════════════════════════════════\n';
+    corpusContent += '         ELPOEBOT - CORPUS             \n';
+    corpusContent += '    Projecte artístic Laura Torres     \n';
+    corpusContent += '═══════════════════════════════════════\n\n';
+    
+    corpus.forEach((verse, index) => {
+        corpusContent += `${index + 1}. ${verse}\n`;
+    });
+    
+    corpusContent += `\n\n═══════════════════════════════════════\n`;
+    corpusContent += `Total de versos: ${corpus.length}\n`;
+    corpusContent += `Generat: ${new Date().toLocaleString('ca-ES')}\n`;
+    corpusContent += `═══════════════════════════════════════\n`;
+    
+    // Create download
+    const blob = new Blob([corpusContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `elpoebot-corpus-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
