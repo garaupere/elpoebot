@@ -129,7 +129,7 @@ function showStatus(message, type) {
 // OUTPUT PAGE FUNCTIONALITY
 function initOutputPage() {
     const poemDisplay = document.getElementById('poemDisplay');
-    const countdownDisplay = document.getElementById('countdownDisplay');
+    const phraseCounterDisplay = document.getElementById('phraseCounterDisplay');
     
     // Get corpus
     const corpus = getCorpus();
@@ -142,7 +142,7 @@ function initOutputPage() {
             <br>
             <p>&gt; Ves a la pàgina INPUT per afegir més versos.</p>
         `;
-        countdownDisplay.innerHTML = '';
+        phraseCounterDisplay.innerHTML = '';
         return;
     }
     
@@ -153,7 +153,7 @@ function initOutputPage() {
 // Cyclic poem generation function
 function generatePoemCycle() {
     const poemDisplay = document.getElementById('poemDisplay');
-    const countdownDisplay = document.getElementById('countdownDisplay');
+    const phraseCounterDisplay = document.getElementById('phraseCounterDisplay');
     const corpus = getCorpus();
     
     // Generate random delay between 30 seconds (30000ms) and 90 seconds (90000ms)
@@ -164,12 +164,12 @@ function generatePoemCycle() {
     // Select random loading phrase
     const randomPhrase = LOADING_PHRASES[Math.floor(Math.random() * LOADING_PHRASES.length)];
     
-    // Show waiting message with countdown in the countdown display area
+    // Show waiting message with countdown in the phrase/counter display area
     const startTime = Date.now();
     const endTime = startTime + randomDelay;
     
     // Add aria-live for screen reader accessibility
-    countdownDisplay.setAttribute('aria-live', 'polite');
+    phraseCounterDisplay.setAttribute('aria-live', 'polite');
     
     // Update countdown every second
     const countdownInterval = setInterval(() => {
@@ -181,7 +181,7 @@ function generatePoemCycle() {
         const remainingSeconds = Math.ceil(remainingMs / 1000);
         const minutes = Math.floor(remainingSeconds / 60);
         const seconds = remainingSeconds % 60;
-        countdownDisplay.innerHTML = `
+        phraseCounterDisplay.innerHTML = `
             <p>&gt; ${randomPhrase}</p>
             <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
         `;
@@ -198,18 +198,15 @@ function generatePoemCycle() {
             // Save poem to book
             savePoemToBook(poem);
             
-            // Display the new poem in the poem display area with the random phrase
+            // Display the new poem and update phrase/counter display
             displayPoem(poem, randomPhrase);
-            
-            // Clear countdown display
-            countdownDisplay.innerHTML = '';
             
             // Continue the cycle - generate next poem after current one is displayed
             setTimeout(() => {
                 generatePoemCycle();
             }, CYCLE_RESTART_DELAY);
         } else {
-            countdownDisplay.innerHTML = `
+            phraseCounterDisplay.innerHTML = `
                 <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
                 <p>&gt; Intenta afegir més versos al corpus.</p>
             `;
@@ -391,8 +388,10 @@ function generateRandomPoem(corpus) {
 
 function displayPoem(poem, randomPhrase) {
     const poemDisplay = document.getElementById('poemDisplay');
-    const book = getBook();
+    const phraseCounterDisplay = document.getElementById('phraseCounterDisplay');
+    const corpus = getCorpus();
     
+    // Display only the verses in the poem display
     let html = `
         <div class="original-verse">
             <br>
@@ -403,6 +402,12 @@ ${poem.lines.map((line, i) => `${line}`).join('\n')}
     `;
     
     poemDisplay.innerHTML = html;
+    
+    // Display random phrase and corpus counter in the second grid
+    phraseCounterDisplay.innerHTML = `
+        <p>&gt; ${randomPhrase}</p>
+        <p>&gt; Versos al corpus: ${corpus.length}</p>
+    `;
 }
 
 // Download book as text file
