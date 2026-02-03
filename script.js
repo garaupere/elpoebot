@@ -199,7 +199,7 @@ function generatePoemCycle() {
             savePoemToBook(poem);
             
             // Display the new poem in the poem display area with the random phrase
-            displayPoem(poem, corpus.length, randomPhrase);
+            displayPoem(poem, randomPhrase);
             
             // Clear countdown display
             countdownDisplay.innerHTML = '';
@@ -389,7 +389,7 @@ function generateRandomPoem(corpus) {
     };
 }
 
-function displayPoem(poem, corpusSize, randomPhrase) {
+function displayPoem(poem, randomPhrase) {
     const poemDisplay = document.getElementById('poemDisplay');
     const book = getBook();
     
