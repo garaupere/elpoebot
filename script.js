@@ -22,6 +22,40 @@ function getCorpus() {
     return JSON.parse(corpus);
 }
 
+// Load default verses from min_rep.txt
+async function loadDefaultVerses() {
+    try {
+        const response = await fetch('min_rep.txt');
+        if (!response.ok) {
+            console.error('No s\'ha pogut carregar min_rep.txt');
+            return [];
+        }
+        const text = await response.text();
+        // Split by lines and filter out empty lines
+        const verses = text.split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0);
+        return verses;
+    } catch (error) {
+        console.error('Error carregant min_rep.txt:', error);
+        return [];
+    }
+}
+
+// Initialize corpus with default verses if empty
+async function initializeCorpusIfEmpty() {
+    const corpus = getCorpus();
+    if (corpus.length === 0) {
+        const defaultVerses = await loadDefaultVerses();
+        if (defaultVerses.length > 0) {
+            saveCorpus(defaultVerses);
+            console.log(`Corpus inicialitzat amb ${defaultVerses.length} versos per defecte de min_rep.txt`);
+            return defaultVerses;
+        }
+    }
+    return corpus;
+}
+
 function saveCorpus(corpus) {
     localStorage.setItem('corpus', JSON.stringify(corpus));
 }
@@ -34,7 +68,10 @@ function addVerseToCorpus(verse) {
 }
 
 // Check which page we're on and initialize accordingly
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize corpus with default verses if empty
+    await initializeCorpusIfEmpty();
+    
     if (document.getElementById('verseForm')) {
         initInputPage();
     } else if (document.getElementById('outputContent')) {
