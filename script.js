@@ -131,10 +131,33 @@ function initOutputPage() {
         return;
     }
     
-    // Generate random delay between 30 seconds (30000ms) and 5 minutes (300000ms)
+    // Start cyclic poem generation
+    generatePoemCycle();
+}
+
+// Cyclic poem generation function
+function generatePoemCycle() {
+    const resultsDisplay = document.getElementById('resultsDisplay');
+    const corpus = getCorpus();
+    
+    // Generate random delay between 30 seconds (30000ms) and 1:30 minutes (90000ms)
     const minDelay = 30000;
-    const maxDelay = 300000;
+    const maxDelay = 90000;
     const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    
+    // Random loading phrases
+    const loadingPhrases = [
+        "El geni fa la seva màgia",
+        "Això no és màgia, és literatura",
+        "Escriure un poema duu el seu temps, que us pensàveu",
+        "Compilant les síl·labes, analitzant el significat ocult",
+        "La meva poesia és semàntica de bits",
+        "Component els versos, alineant les idees",
+        "Tirant els versos per l'escala, recollint el poema"
+    ];
+    
+    // Select random loading phrase
+    const randomPhrase = loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
     
     // Show waiting message with countdown
     const startTime = Date.now();
@@ -154,7 +177,7 @@ function initOutputPage() {
         const minutes = Math.floor(remainingSeconds / 60);
         const seconds = remainingSeconds % 60;
         resultsDisplay.innerHTML = `
-            <p>&gt; El Poebot està creant el teu poema...</p>
+            <p>&gt; ${randomPhrase}</p>
             <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
         `;
     }, 1000);
@@ -171,11 +194,20 @@ function initOutputPage() {
             savePoemToBook(poem);
             
             displayPoem(poem, corpus.length);
+            
+            // Continue the cycle - generate next poem after current one is displayed
+            setTimeout(() => {
+                generatePoemCycle();
+            }, 5000); // Wait 5 seconds before starting next cycle
         } else {
             resultsDisplay.innerHTML = `
                 <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
                 <p>&gt; Intenta afegir més versos al corpus.</p>
             `;
+            // Retry after 10 seconds if error occurs
+            setTimeout(() => {
+                generatePoemCycle();
+            }, 10000);
         }
     }, randomDelay);
 }
@@ -321,8 +353,8 @@ function tryGenerateABAB(corpus) {
 
 // Generate random length poem when ABAB fails
 function generateRandomPoem(corpus) {
-    // Random number of lines between 4 and 14
-    const numLines = Math.floor(Math.random() * 11) + 4; // 4 to 14
+    // Random number of lines between 4 and 6
+    const numLines = Math.floor(Math.random() * 3) + 4; // 4 to 6
     
     const lines = [];
     const usedLines = [];
@@ -353,16 +385,16 @@ function displayPoem(poem, corpusSize) {
     const book = getBook();
     
     let html = `
-        <div class="info-box">
-            <p>&gt; Poema generat a partir de ${corpusSize} versos del corpus</p>
-            <p>&gt; Total de poemes al book: ${book.length}</p>
-        </div>
-        <br>
         <div class="original-verse">
             <br>
             <div class="text" style="white-space: pre-line; font-size: 18px; line-height: 1.8;">
 ${poem.lines.map((line, i) => `${line}`).join('\n')}
             </div>
+        </div>
+        <br>
+        <div class="info-box">
+            <p>&gt; Poema generat a partir de ${corpusSize} versos del corpus</p>
+            <p>&gt; Total de poemes al book: ${book.length}</p>
         </div>
     `;
     
