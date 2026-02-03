@@ -394,7 +394,7 @@ function displayPoem(poem, randomPhrase) {
     // Display only the verses in the poem display
     poemDisplay.innerHTML = `
         <div style="white-space: pre-line; font-size: 18px; line-height: 1.8; text-align: center; color: #00ff00;">
-${poem.lines.map((line, i) => `${line}`).join('\n')}
+${poem.lines.join('\n')}
         </div>
     `;
     
