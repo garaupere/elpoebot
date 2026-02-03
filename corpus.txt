@@ -1,7 +1,0 @@
-# Corpus de versos - ELPOEBOT
-# Aquest fitxer guarda tots els versos afegits
-# Cada línia (excepte comentaris #) és un vers
-Aquest és un vers de prova
-La lluna brilla en el cel fosc
-I els estels canten amb veu suau
-Entre les ombres del meu cor
