@@ -142,7 +142,7 @@ function getBook() {
 
 // Remove punctuation and get rhyme (last 4 characters)
 function getRhyme(text) {
-    const cleaned = text.replace(/[;:,.¿?¡!)(\s]/g, '');
+    const cleaned = text.replace(/[;:,.¿?¡!()\s]/g, '');
     return cleaned.slice(-4).toLowerCase();
 }
 
