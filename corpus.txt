@@ -1,0 +1,3 @@
+# Corpus de versos
+# Aquest fitxer es va omplint amb els versos que introdueixen els usuaris
+# El contingut no s'esborra mai

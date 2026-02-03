@@ -13,18 +13,23 @@
             <div class="terminal-content">
                 <h1>ENTRADA DE VERS</h1>
                 <br>
-                <p>&gt; Introdueix un vers per processar:</p>
+                <p>&gt; Introdueix un vers per afegir al corpus:</p>
+                <p>&gt; (Els versos s'acumulen i no s'esborren mai)</p>
                 <br>
                 <form id="verseForm">
                     <div class="input-line">
                         <span class="prompt">$</span>
-                        <input type="text" id="verseInput" class="terminal-input" placeholder="Escriu el teu vers aquí..." autofocus>
+                        <input type="text" id="verseInput" class="terminal-input" placeholder="Escriu un vers aquí..." autofocus>
                     </div>
                     <br>
                     <button type="submit" class="terminal-button">
-                        [ PROCESSAR ]
+                        [ AFEGIR AL CORPUS ]
                     </button>
                 </form>
+                <br>
+                <div class="info-box">
+                    <p>&gt; CORPUS ACTUAL: <span id="corpusCount">0</span> versos</p>
+                </div>
                 <br>
                 <div id="statusMessage" class="status-message"></div>
                 <br>
