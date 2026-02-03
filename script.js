@@ -52,8 +52,23 @@ function initInputPage() {
         // Add verse to corpus
         const corpus = addVerseToCorpus(verse);
         
+        // Random messages list
+        const randomMessages = [
+            "El Poebot s'alimenta de les il·lusions dels altres",
+            "El Poebot té fam, no li donis només un vers",
+            "Les teves paraules fan crèixer la bèstia",
+            "On tu hi veus fems digital, el Poebot hi veu vida",
+            "Per ser bon poeta, el Poebot ha de menjar",
+            "Cada mot, és un alè de vida per al Poebot",
+            "El Poebot processa Mots i genera Art",
+            "Deixa que el Poebot dissenyi els teus pensaments"
+        ];
+        
+        // Select random message
+        const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+        
         // Show success message
-        showStatus(`VERS AFEGIT AL CORPUS! Total de versos: ${corpus.length}`, 'success');
+        showStatus(randomMessage, 'success');
         
         // Clear input
         input.value = '';
@@ -98,20 +113,50 @@ function initOutputPage() {
         return;
     }
     
-    // Generate poem
-    const poem = generatePoem(corpus);
+    // Generate random delay between 30 seconds (30000ms) and 5 minutes (300000ms)
+    const minDelay = 30000;
+    const maxDelay = 300000;
+    const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     
-    if (poem) {
-        // Save poem to book
-        savePoemToBook(poem);
+    // Show waiting message with countdown
+    const startTime = Date.now();
+    const endTime = startTime + randomDelay;
+    
+    // Update countdown every second
+    const countdownInterval = setInterval(() => {
+        const remainingMs = endTime - Date.now();
+        if (remainingMs <= 0) {
+            clearInterval(countdownInterval);
+        } else {
+            const remainingSeconds = Math.ceil(remainingMs / 1000);
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            resultsDisplay.innerHTML = `
+                <p>&gt; El Poebot està creant el teu poema...</p>
+                <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
+            `;
+        }
+    }, 1000);
+    
+    // Generate poem after delay
+    setTimeout(() => {
+        clearInterval(countdownInterval);
         
-        displayPoem(poem, corpus.length);
-    } else {
-        resultsDisplay.innerHTML = `
-            <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
-            <p>&gt; Intenta afegir més versos al corpus.</p>
-        `;
-    }
+        // Generate poem
+        const poem = generatePoem(corpus);
+        
+        if (poem) {
+            // Save poem to book
+            savePoemToBook(poem);
+            
+            displayPoem(poem, corpus.length);
+        } else {
+            resultsDisplay.innerHTML = `
+                <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
+                <p>&gt; Intenta afegir més versos al corpus.</p>
+            `;
+        }
+    }, randomDelay);
 }
 
 // Save poem to book with timestamp
@@ -287,39 +332,6 @@ function displayPoem(poem, corpusSize) {
     const resultsDisplay = document.getElementById('resultsDisplay');
     const book = getBook();
     
-    let rhymeInfo = '';
-    let poemTypeLabel = '';
-    
-    if (poem.type === 'ABAB') {
-        poemTypeLabel = 'POEMA GENERAT AMB ESQUEMA DE RIMES ABAB:';
-        rhymeInfo = `
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ANÀLISI DE RIMES:</div>
-                <div class="result-text">&gt; Línia 1 i 3 rimen amb: "${poem.rhymes.rima1}"</div>
-                <div class="result-text">&gt; Línia 2 i 4 rimen amb: "${poem.rhymes.rima2}"</div>
-            </div>
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ESTRUCTURA DEL POEMA:</div>
-                <div class="result-text">&gt; Esquema de rimes: A-B-A-B</div>
-                <div class="result-text">&gt; Nombre de línies: 4</div>
-                <div class="result-text">&gt; Tipus: Quarteta amb rimes basades en terminació</div>
-            </div>
-        `;
-    } else {
-        poemTypeLabel = 'POEMA GENERAT AMB FORMA LLIURE:';
-        rhymeInfo = `
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ESTRUCTURA DEL POEMA:</div>
-                <div class="result-text">&gt; Tipus: Poema lliure</div>
-                <div class="result-text">&gt; Nombre de línies: ${poem.lines.length}</div>
-                <div class="result-text">&gt; Nota: No s'han trobat suficients rimes ABAB al corpus</div>
-            </div>
-        `;
-    }
-    
     let html = `
         <div class="info-box">
             <p>&gt; Poema generat a partir de ${corpusSize} versos del corpus</p>
@@ -327,21 +339,10 @@ function displayPoem(poem, corpusSize) {
         </div>
         <br>
         <div class="original-verse">
-            <div class="label">&gt; ${poemTypeLabel}</div>
             <br>
             <div class="text" style="white-space: pre-line; font-size: 18px; line-height: 1.8;">
 ${poem.lines.map((line, i) => `${line}`).join('\n')}
             </div>
-        </div>
-        ${rhymeInfo}
-        <br>
-        <div class="menu-item" style="text-align: center;">
-            <button onclick="location.reload()" class="terminal-button">
-                [ GENERAR UN ALTRE POEMA ]
-            </button>
-            <button onclick="downloadBook()" class="terminal-button" style="margin-left: 10px;">
-                [ DESCARREGAR BOOK ]
-            </button>
         </div>
     `;
     
