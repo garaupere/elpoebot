@@ -3,34 +3,14 @@ Projecte dissenyat per Pere Garau Borràs amb motiu de l'exposició artística d
 
  ©2022 Pere Garau Borràs
 
-## Instal·lació
+## Ús
 
-```bash
-npm install
-```
-
-## Executar el servidor
-
-```bash
-npm start
-```
-
-El servidor s'executarà a http://localhost:3000
+Simplement obre el fitxer `index.html` en un navegador web. No es necessita cap servidor ni instal·lació.
 
 ## Persistència de dades
 
-L'aplicació ara desa les dades en fitxers al projecte:
-- **corpus.txt**: Conté tots els versos afegits
-- **book.json**: Conté tots els poemes generats
+L'aplicació desa les dades automàticament al navegador utilitzant `localStorage`:
+- **Corpus**: Tots els versos afegits es mantenen al navegador
+- **Book**: Tots els poemes generats es guarden automàticament
 
-Les dades es mantenen entre sessions i són accessibles sempre.
-
-## Important - Ús local
-
-Aquest servidor està dissenyat per a ús local i exposicions artístiques.
-**No està preparat per a producció** ja que no inclou:
-- Limitació de taxa (rate limiting)
-- Autenticació
-- Validació exhaustiva d'entrada
-
-Per a ús públic, considera afegir aquestes característiques de seguretat.
+Les dades es mantenen entre sessions i són accessibles sempre que utilitzis el mateix navegador.
