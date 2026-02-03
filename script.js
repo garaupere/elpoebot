@@ -38,8 +38,26 @@ document.addEventListener('DOMContentLoaded', function() {
         initInputPage();
     } else if (document.getElementById('outputContent')) {
         initOutputPage();
+    } else if (document.getElementById('corpusCountIndex')) {
+        initIndexPage();
     }
 });
+
+// INDEX PAGE FUNCTIONALITY
+async function initIndexPage() {
+    const corpusCountElement = document.getElementById('corpusCountIndex');
+    const poemCountElement = document.getElementById('poemCountIndex');
+    
+    if (corpusCountElement && poemCountElement) {
+        // Get corpus count
+        const corpus = await getCorpus();
+        corpusCountElement.textContent = corpus.length;
+        
+        // Get poem count
+        const book = await getBook();
+        poemCountElement.textContent = book.length;
+    }
+}
 
 // INPUT PAGE FUNCTIONALITY
 function initInputPage() {
