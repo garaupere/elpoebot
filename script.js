@@ -153,7 +153,7 @@ function generatePoemCycle() {
     const resultsDisplay = document.getElementById('resultsDisplay');
     const corpus = getCorpus();
     
-    // Generate random delay between 30 seconds (30000ms) and 1:30 minutes (90000ms)
+    // Generate random delay between 30 seconds (30000ms) and 90 seconds (90000ms)
     const minDelay = 30000;
     const maxDelay = 90000;
     const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
