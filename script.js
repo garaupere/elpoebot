@@ -392,16 +392,11 @@ function displayPoem(poem, randomPhrase) {
     const corpus = getCorpus();
     
     // Display only the verses in the poem display
-    let html = `
-        <div class="original-verse">
-            <br>
-            <div class="text" style="white-space: pre-line; font-size: 18px; line-height: 1.8;">
+    poemDisplay.innerHTML = `
+        <div style="white-space: pre-line; font-size: 18px; line-height: 1.8; text-align: center; color: #00ff00;">
 ${poem.lines.map((line, i) => `${line}`).join('\n')}
-            </div>
         </div>
     `;
-    
-    poemDisplay.innerHTML = html;
     
     // Display random phrase and corpus counter in the second grid
     phraseCounterDisplay.innerHTML = `
