@@ -122,20 +122,23 @@ function initOutputPage() {
     const startTime = Date.now();
     const endTime = startTime + randomDelay;
     
+    // Add aria-live for screen reader accessibility
+    resultsDisplay.setAttribute('aria-live', 'polite');
+    
     // Update countdown every second
     const countdownInterval = setInterval(() => {
         const remainingMs = endTime - Date.now();
         if (remainingMs <= 0) {
             clearInterval(countdownInterval);
-        } else {
-            const remainingSeconds = Math.ceil(remainingMs / 1000);
-            const minutes = Math.floor(remainingSeconds / 60);
-            const seconds = remainingSeconds % 60;
-            resultsDisplay.innerHTML = `
-                <p>&gt; El Poebot està creant el teu poema...</p>
-                <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
-            `;
+            return;
         }
+        const remainingSeconds = Math.ceil(remainingMs / 1000);
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = remainingSeconds % 60;
+        resultsDisplay.innerHTML = `
+            <p>&gt; El Poebot està creant el teu poema...</p>
+            <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
+        `;
     }, 1000);
     
     // Generate poem after delay
