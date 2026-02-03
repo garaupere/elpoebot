@@ -1,0 +1,4 @@
+# Corpus de versos
+# NOTA: Aquest fitxer és només informatiu
+# El corpus real es guarda a localStorage del navegador
+# Els versos que introdueixes a través d'INPUT es guarden al navegador

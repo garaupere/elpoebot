@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INPUT - ELPOEBOT</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">ELPOEBOT - INPUT</div>
+            <div class="terminal-content">
+                <h1>ENTRADA DE VERS</h1>
+                <br>
+                <p>&gt; Introdueix un vers per afegir al corpus:</p>
+                <p>&gt; (Els versos s'acumulen i no s'esborren mai)</p>
+                <br>
+                <form id="verseForm">
+                    <div class="input-line">
+                        <span class="prompt">$</span>
+                        <input type="text" id="verseInput" class="terminal-input" placeholder="Escriu un vers aquí..." autofocus>
+                    </div>
+                    <br>
+                    <button type="submit" class="terminal-button">
+                        [ AFEGIR AL CORPUS ]
+                    </button>
+                </form>
+                <br>
+                <div class="info-box">
+                    <p>&gt; CORPUS ACTUAL: <span id="corpusCount">0</span> versos</p>
+                </div>
+                <br>
+                <div id="statusMessage" class="status-message"></div>
+                <br>
+                <br>
+                <div class="menu-item">
+                    <span class="prompt">&gt;</span> <a href="index.html">Tornar al menú principal</a>
+                </div>
+                <div class="menu-item">
+                    <span class="prompt">&gt;</span> <a href="output.html">Anar a OUTPUT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
