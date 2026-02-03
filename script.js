@@ -198,8 +198,8 @@ function generatePoemCycle() {
             // Save poem to book
             savePoemToBook(poem);
             
-            // Display the new poem in the poem display area
-            displayPoem(poem, corpus.length);
+            // Display the new poem in the poem display area with the random phrase
+            displayPoem(poem, randomPhrase);
             
             // Clear countdown display
             countdownDisplay.innerHTML = '';
@@ -389,7 +389,7 @@ function generateRandomPoem(corpus) {
     };
 }
 
-function displayPoem(poem, corpusSize) {
+function displayPoem(poem, randomPhrase) {
     const poemDisplay = document.getElementById('poemDisplay');
     const book = getBook();
     
@@ -402,7 +402,7 @@ ${poem.lines.map((line, i) => `${line}`).join('\n')}
         </div>
         <br>
         <div class="info-box">
-            <p>&gt; Poema generat a partir de ${corpusSize} versos del corpus</p>
+            <p>&gt; ${randomPhrase}</p>
             <p>&gt; Total de poemes al book: ${book.length}</p>
         </div>
     `;
