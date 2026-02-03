@@ -182,12 +182,11 @@ function initOutputPage() {
 
 // Save poem to book with timestamp
 function savePoemToBook(poem) {
-    const timestamp = new Date().toISOString();
     const book = getBook();
     
     const poemEntry = {
         poem: poem,
-        timestamp: timestamp,
+        timestamp: new Date().toISOString(),
         date: new Date().toLocaleString('ca-ES')
     };
     
