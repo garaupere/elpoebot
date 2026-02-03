@@ -103,7 +103,6 @@ def main():
             if total_casos > 0:
                 counts = syl_df[mask].sum(axis=0)
                 percentatges = (counts / total_casos) * 100
-                percentatges.index = [f'{int(c)}' for c in percentatges.index]
                 matriu.loc[f'{i}'] = percentatges
             else:
                 matriu.loc[f'{i}'] = np.nan

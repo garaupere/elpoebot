@@ -38,13 +38,18 @@ from heatmap_tonicitat_metrica import generar_heatmap_tonicitat
 # dataset: DataFrame amb les teves dades de versos
 # sillabes: llista de noms de columnes ['1', '2', '3', ..., '10']
 
-# Generar el heatmap
+# Generar el heatmap (guarda a la ruta per defecte)
 generar_heatmap_tonicitat(dataset, sillabes)
+
+# O especificar una ruta personalitzada
+generar_heatmap_tonicitat(dataset, sillabes, output_path='/tmp/my_heatmap.png')
 ```
 
 ## Sortida
 
-El heatmap es guarda a: `../gràfics/metre/heatmap_tonicitat_mètrica.png`
+Per defecte, el heatmap es guarda a: `../gràfics/metre/heatmap_tonicitat_mètrica.png`
+
+Pots especificar una ruta personalitzada amb el paràmetre `output_path`.
 
 ## Exemple
 

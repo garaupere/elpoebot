@@ -64,12 +64,8 @@ def test_heatmap_logic():
     
     print("\n=== Generant gràfic de prova ===")
     try:
-        # Modificar temporalment plt.show per no mostrar el gràfic
-        plt.show = lambda: None
-        
         # Modificar temporalment la funció per guardar a /tmp
         import heatmap_tonicitat_metrica as htm
-        original_code = htm.generar_heatmap_tonicitat
         
         def test_generar_heatmap(dataset, sillabes):
             # Cridar la funció original però canviar on es guarda
@@ -86,7 +82,6 @@ def test_heatmap_logic():
                 if total_casos > 0:
                     counts = syl_df[mask].sum(axis=0)
                     percentatges = (counts / total_casos) * 100
-                    percentatges.index = [f'{int(c)}' for c in percentatges.index]
                     matriu.loc[f'{i}'] = percentatges
                 else:
                     matriu.loc[f'{i}'] = np.nan

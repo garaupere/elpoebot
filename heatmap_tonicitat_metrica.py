@@ -6,7 +6,7 @@ import seaborn as sns
 # Assumim que 'dataset' i 'sillabes' ja estan definits
 # Aquest script hauria de ser cridat després de preparar aquestes variables
 
-def generar_heatmap_tonicitat(dataset, sillabes):
+def generar_heatmap_tonicitat(dataset, sillabes, output_path='../gràfics/metre/heatmap_tonicitat_mètrica.png'):
     """
     Genera un heatmap de tonicitat amb recompte de casos i percentatges.
     
@@ -16,6 +16,8 @@ def generar_heatmap_tonicitat(dataset, sillabes):
         DataFrame amb les dades de síl·labes
     sillabes : list
         Llista de noms de columnes que contenen les dades de síl·labes
+    output_path : str, opcional
+        Ruta on guardar el fitxer PNG generat (default: '../gràfics/metre/heatmap_tonicitat_mètrica.png')
     """
     
     # syl_df ja ha de ser el DataFrame preparat (columnes '1'..'10' amb 1 indicant síl·laba tònica)
@@ -38,7 +40,6 @@ def generar_heatmap_tonicitat(dataset, sillabes):
             counts = syl_df[mask].sum(axis=0)  # Suma de 1s per columna
             # Convertir a percentatge respecte del total de casos amb tonicitat a la posició i
             percentatges = (counts / total_casos) * 100
-            percentatges.index = [f'{int(c)}' for c in percentatges.index]
             matriu.loc[f'{i}'] = percentatges
         else:
             matriu.loc[f'{i}'] = np.nan
@@ -97,7 +98,7 @@ def generar_heatmap_tonicitat(dataset, sillabes):
         ax.text(x_text, y, s, va='center', ha='left', fontsize=11)
 
     plt.tight_layout()
-    plt.savefig('../gràfics/metre/heatmap_tonicitat_mètrica.png', dpi=600)
+    plt.savefig(output_path, dpi=600)
     plt.show()
 
 
