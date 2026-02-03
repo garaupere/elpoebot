@@ -7,3 +7,10 @@ node_modules/
 package-lock.json
 *.log
 .DS_Store
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
