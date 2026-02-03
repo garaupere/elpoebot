@@ -1,23 +1,35 @@
 // ELPOEBOT JavaScript - Generador de Poemes amb Corpus d'Usuari
+// API Base URL
+const API_BASE_URL = window.location.origin;
 
-// Initialize corpus from localStorage
-function getCorpus() {
-    const corpus = localStorage.getItem('corpus');
-    if (!corpus) {
+// Get corpus from server
+async function getCorpus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/corpus`);
+        const data = await response.json();
+        return data.corpus || [];
+    } catch (error) {
+        console.error('Error getting corpus:', error);
         return [];
     }
-    return JSON.parse(corpus);
 }
 
-function saveCorpus(corpus) {
-    localStorage.setItem('corpus', JSON.stringify(corpus));
-}
-
-function addVerseToCorpus(verse) {
-    const corpus = getCorpus();
-    corpus.push(verse.trim());
-    saveCorpus(corpus);
-    return corpus;
+// Add verse to corpus on server
+async function addVerseToCorpus(verse) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/corpus`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ verse: verse.trim() })
+        });
+        const data = await response.json();
+        return data.corpus || [];
+    } catch (error) {
+        console.error('Error adding verse:', error);
+        return [];
+    }
 }
 
 // Check which page we're on and initialize accordingly
@@ -26,8 +38,26 @@ document.addEventListener('DOMContentLoaded', function() {
         initInputPage();
     } else if (document.getElementById('outputContent')) {
         initOutputPage();
+    } else if (document.getElementById('corpusCountIndex')) {
+        initIndexPage();
     }
 });
+
+// INDEX PAGE FUNCTIONALITY
+async function initIndexPage() {
+    const corpusCountElement = document.getElementById('corpusCountIndex');
+    const poemCountElement = document.getElementById('poemCountIndex');
+    
+    if (corpusCountElement && poemCountElement) {
+        // Get corpus count
+        const corpus = await getCorpus();
+        corpusCountElement.textContent = corpus.length;
+        
+        // Get poem count
+        const book = await getBook();
+        poemCountElement.textContent = book.length;
+    }
+}
 
 // INPUT PAGE FUNCTIONALITY
 function initInputPage() {
@@ -39,7 +69,7 @@ function initInputPage() {
     // Update corpus count
     updateCorpusCount();
     
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const verse = input.value.trim();
@@ -49,11 +79,29 @@ function initInputPage() {
             return;
         }
         
+        // Show loading status
+        showStatus('Desant vers...', 'info');
+        
         // Add verse to corpus
-        const corpus = addVerseToCorpus(verse);
+        const corpus = await addVerseToCorpus(verse);
+        
+        // Random messages list
+        const randomMessages = [
+            "El Poebot s'alimenta de les il·lusions dels altres",
+            "El Poebot té fam, no li donis només un vers",
+            "Les teves paraules fan crèixer la bèstia",
+            "On tu hi veus fems digital, el Poebot hi veu vida",
+            "Per ser bon poeta, el Poebot ha de menjar",
+            "Cada mot, és un alè de vida per al Poebot",
+            "El Poebot processa Mots i genera Art",
+            "Deixa que el Poebot dissenyi els teus pensaments"
+        ];
+        
+        // Select random message
+        const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
         
         // Show success message
-        showStatus(`VERS AFEGIT AL CORPUS! Total de versos: ${corpus.length}`, 'success');
+        showStatus(randomMessage, 'success');
         
         // Clear input
         input.value = '';
@@ -66,10 +114,10 @@ function initInputPage() {
     });
 }
 
-function updateCorpusCount() {
+async function updateCorpusCount() {
     const corpusCount = document.getElementById('corpusCount');
     if (corpusCount) {
-        const corpus = getCorpus();
+        const corpus = await getCorpus();
         corpusCount.textContent = corpus.length;
     }
 }
@@ -81,11 +129,11 @@ function showStatus(message, type) {
 }
 
 // OUTPUT PAGE FUNCTIONALITY
-function initOutputPage() {
+async function initOutputPage() {
     const resultsDisplay = document.getElementById('resultsDisplay');
     
     // Get corpus
-    const corpus = getCorpus();
+    const corpus = await getCorpus();
     
     if (corpus.length < 4) {
         resultsDisplay.innerHTML = `
@@ -98,46 +146,90 @@ function initOutputPage() {
         return;
     }
     
-    // Generate poem
-    const poem = generatePoem(corpus);
+    // Generate random delay between 30 seconds (30000ms) and 5 minutes (300000ms)
+    const minDelay = 30000;
+    const maxDelay = 300000;
+    const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     
-    if (poem) {
-        // Save poem to book
-        savePoemToBook(poem);
-        
-        displayPoem(poem, corpus.length);
-    } else {
+    // Show waiting message with countdown
+    const startTime = Date.now();
+    const endTime = startTime + randomDelay;
+    
+    // Add aria-live for screen reader accessibility
+    resultsDisplay.setAttribute('aria-live', 'polite');
+    
+    // Update countdown every second
+    const countdownInterval = setInterval(() => {
+        const remainingMs = endTime - Date.now();
+        if (remainingMs <= 0) {
+            clearInterval(countdownInterval);
+            return;
+        }
+        const remainingSeconds = Math.ceil(remainingMs / 1000);
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = remainingSeconds % 60;
         resultsDisplay.innerHTML = `
-            <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
-            <p>&gt; Intenta afegir més versos al corpus.</p>
+            <p>&gt; El Poebot està creant el teu poema...</p>
+            <p>&gt; Temps estimat restant: ${minutes}m ${seconds}s</p>
         `;
-    }
+    }, 1000);
+    
+    // Generate poem after delay
+    setTimeout(async () => {
+        clearInterval(countdownInterval);
+        
+        // Generate poem
+        const poem = generatePoem(corpus);
+        
+        if (poem) {
+            // Save poem to book
+            await savePoemToBook(poem);
+            
+            displayPoem(poem, corpus.length);
+        } else {
+            resultsDisplay.innerHTML = `
+                <p>&gt; ERROR: No s'ha pogut generar el poema.</p>
+                <p>&gt; Intenta afegir més versos al corpus.</p>
+            `;
+        }
+    }, randomDelay);
 }
 
 // Save poem to book with timestamp
-function savePoemToBook(poem) {
-    const timestamp = new Date().toISOString();
-    const book = getBook();
-    
+async function savePoemToBook(poem) {
     const poemEntry = {
         poem: poem,
-        timestamp: timestamp,
+        timestamp: new Date().toISOString(),
         date: new Date().toLocaleString('ca-ES')
     };
     
-    book.push(poemEntry);
-    localStorage.setItem('book', JSON.stringify(book));
-    
-    console.log('Poema desat al book:', poemEntry);
-}
-
-// Get book from localStorage
-function getBook() {
-    const book = localStorage.getItem('book');
-    if (!book) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/book`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ poem: poemEntry })
+        });
+        const data = await response.json();
+        console.log('Poema desat al book:', poemEntry);
+        return data.book || [];
+    } catch (error) {
+        console.error('Error saving poem:', error);
         return [];
     }
-    return JSON.parse(book);
+}
+
+// Get book from server
+async function getBook() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/book`);
+        const data = await response.json();
+        return data.book || [];
+    } catch (error) {
+        console.error('Error getting book:', error);
+        return [];
+    }
 }
 
 // Remove punctuation and get rhyme (last 4 characters)
@@ -283,42 +375,9 @@ function generateRandomPoem(corpus) {
     };
 }
 
-function displayPoem(poem, corpusSize) {
+async function displayPoem(poem, corpusSize) {
     const resultsDisplay = document.getElementById('resultsDisplay');
-    const book = getBook();
-    
-    let rhymeInfo = '';
-    let poemTypeLabel = '';
-    
-    if (poem.type === 'ABAB') {
-        poemTypeLabel = 'POEMA GENERAT AMB ESQUEMA DE RIMES ABAB:';
-        rhymeInfo = `
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ANÀLISI DE RIMES:</div>
-                <div class="result-text">&gt; Línia 1 i 3 rimen amb: "${poem.rhymes.rima1}"</div>
-                <div class="result-text">&gt; Línia 2 i 4 rimen amb: "${poem.rhymes.rima2}"</div>
-            </div>
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ESTRUCTURA DEL POEMA:</div>
-                <div class="result-text">&gt; Esquema de rimes: A-B-A-B</div>
-                <div class="result-text">&gt; Nombre de línies: 4</div>
-                <div class="result-text">&gt; Tipus: Quarteta amb rimes basades en terminació</div>
-            </div>
-        `;
-    } else {
-        poemTypeLabel = 'POEMA GENERAT AMB FORMA LLIURE:';
-        rhymeInfo = `
-            <br>
-            <div class="result-item">
-                <div class="result-header">&gt; ESTRUCTURA DEL POEMA:</div>
-                <div class="result-text">&gt; Tipus: Poema lliure</div>
-                <div class="result-text">&gt; Nombre de línies: ${poem.lines.length}</div>
-                <div class="result-text">&gt; Nota: No s'han trobat suficients rimes ABAB al corpus</div>
-            </div>
-        `;
-    }
+    const book = await getBook();
     
     let html = `
         <div class="info-box">
@@ -327,21 +386,10 @@ function displayPoem(poem, corpusSize) {
         </div>
         <br>
         <div class="original-verse">
-            <div class="label">&gt; ${poemTypeLabel}</div>
             <br>
             <div class="text" style="white-space: pre-line; font-size: 18px; line-height: 1.8;">
 ${poem.lines.map((line, i) => `${line}`).join('\n')}
             </div>
-        </div>
-        ${rhymeInfo}
-        <br>
-        <div class="menu-item" style="text-align: center;">
-            <button onclick="location.reload()" class="terminal-button">
-                [ GENERAR UN ALTRE POEMA ]
-            </button>
-            <button onclick="downloadBook()" class="terminal-button" style="margin-left: 10px;">
-                [ DESCARREGAR BOOK ]
-            </button>
         </div>
     `;
     
@@ -349,8 +397,8 @@ ${poem.lines.map((line, i) => `${line}`).join('\n')}
 }
 
 // Download book as text file
-function downloadBook() {
-    const book = getBook();
+async function downloadBook() {
+    const book = await getBook();
     
     if (book.length === 0) {
         alert('El book està buit. Genera algun poema primer.');
