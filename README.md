@@ -1,6 +1,7 @@
 # elpoebot
 Projecte dissenyat per Pere Garau Borràs amb motiu de l'exposició artística de Laura Torres Bauzà <i>L'escriptura en el relat artístic</i> (2022).
-(c) 2022 Pere Garau Borràs
+
+ ©2022 Pere Garau Borràs
 
 ## Instal·lació
 
