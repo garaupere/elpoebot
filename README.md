@@ -5,7 +5,7 @@ Projecte dissenyat per Pere Garau Borràs amb motiu de l'exposició artística d
 
 ## Ús
 
-Simplement accedir a l'aplicació en un navegador web. No es necessita cap servidor ni instal·lació.
+Simplement accediu a l'aplicació en un navegador web. No es necessita cap servidor ni instal·lació.
 Enllaç: https://garaupere.github.io/elpoebot
 
 ## Persistència de dades
@@ -14,4 +14,4 @@ L'aplicació desa les dades automàticament al navegador utilitzant `localStorag
 - **Corpus**: Tots els versos afegits es mantenen al navegador
 - **Book**: Tots els poemes generats es guarden automàticament
 
-Les dades es mantenen entre sessions i són accessibles sempre que utilitzis el mateix navegador.
+Les dades es mantenen entre sessions i són accessibles sempre que s'usi el mateix navegador.
